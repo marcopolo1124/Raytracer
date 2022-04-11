@@ -85,7 +85,7 @@ class Screen:
         self.screen_width = screen_half_width * 2
         self.cam_distance = cam_distance
         self.screen = self.get_screen()
-        self.pix_data = np.zeros((self.screen_width, 2))
+        self.pix_data = []
 
     def get_screen(self):
         # Get the line that represents the screen
@@ -107,9 +107,10 @@ class Screen:
             ray = Line(self.viewer, ray_direction)
             # find closest line and draw
             pix_value = self.calculate_pixel_value(ray, lines)
-            print(pixel, pix_value.tolist())
+            self.pix_data.append(pix_value)
             # print(pix_value)
-
+        for pixel, data in enumerate(self.pix_data):
+            print(pixel, data.tolist())
     def calculate_pixel_value(self, ray, lines, starting_value=0, bounces=5):
         distance = np.inf
         line_boundary = None
