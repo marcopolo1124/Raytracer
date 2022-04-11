@@ -111,6 +111,7 @@ class Screen:
             # print(pix_value)
         for pixel, data in enumerate(self.pix_data):
             print(pixel, data.tolist())
+
     def calculate_pixel_value(self, ray, lines, starting_value=0, bounces=5):
         distance = np.inf
         line_boundary = None
