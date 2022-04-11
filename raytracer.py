@@ -101,13 +101,14 @@ class Screen:
 
     def trace(self, lines):  
         # Sweep ray through every pixel
+        np.set_printoptions(linewidth=np.inf)
         for pixel in range(self.screen_width):
             ray_direction = self.get_pixel(pixel) - self.viewer
             ray = Line(self.viewer, ray_direction)
             # find closest line and draw
             pix_value = self.calculate_pixel_value(ray, lines)
-            print(pixel)
-            print(pix_value)
+            print(pixel, pix_value.tolist())
+            # print(pix_value)
 
     def calculate_pixel_value(self, ray, lines, starting_value=0, bounces=5):
         distance = np.inf
