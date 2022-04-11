@@ -104,15 +104,18 @@ class Screen:
             print(pixel)
             print(pix_value)
 
-    def calculate_pixel_value(self, ray, lines, bounces=5):
+    def calculate_pixel_value(self, ray, lines, starting_value=0, bounces=5):
         distance = np.inf
         line_boundary = None
         value = 0
         brightness = 0
         for line in lines:
+            if line.value == starting_value:
+                continue
+
             param = ray.line_intersection(line)
             # Case when a.) Line is parallel, b.) line intersection does not occur
-            if param is None or param[1] < 0 or param[1] > 1:
+            if param is None or param[1] <= 0 or param[1] > 1:
                 continue
             if param[0] <= distance:
                 distance = param[0]
@@ -149,7 +152,7 @@ class Screen:
 
             new_ray = Line(intersection_point, ray.reflect(line_boundary))
             new_bounce = bounces - 1
-            reflected_pix_value = self.calculate_pixel_value(new_ray, lines, new_bounce)
+            reflected_pix_value = self.calculate_pixel_value(new_ray, lines, line_boundary.value, new_bounce)
             pix_value = np.vstack([pix_value, reflected_pix_value])
         return pix_value
 
@@ -167,6 +170,6 @@ line_3_back = LineBoundary(line_3.get_back_line(1), 3)
 line_4 = LineBoundary(boundary_4, 4)
 line_4_back = LineBoundary(line_4.get_back_line(1), 4)
 
-lines = [line_1, line_1_back, line_2, line_2_back, line_3, line_3_back] #,line_4, line_4_back]
+lines = [line_1, line_2, line_3] #,line_4, line_4_back]
 
 screen1.trace(lines)
