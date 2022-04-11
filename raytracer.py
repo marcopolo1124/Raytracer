@@ -35,24 +35,29 @@ class Line:
         return param
 
     def reflect(self, line_boundary):
-        const = np.dot(self.unit_direction, line_boundary.unit_normal)
-        a_co = line_boundary.unit_normal[1] ** 2 + line_boundary.unit_normal[0] ** 2
-        b_co = -2 * line_boundary.unit_normal[0]
-        c_co =  const ** 2 - line_boundary.unit_normal[1] ** 2
-        roots = np.roots([a_co, b_co, c_co])
-        if roots.size >= 2:
-            # Find solution with the largest difference
-            diff = 0
-            x = self.unit_direction[0]
-            for root in roots:
-                current_diff = np.abs(root - self.unit_direction[0])
-                if current_diff > diff:
-                    diff = current_diff
-                    x = root
-            y = (const - line_boundary.unit_normal[0] * x) / line_boundary.unit_normal[1]
-            new_direction = -1 * np.array([x,y])
+        if line_boundary.unit_normal[1] != 0:
+            const = np.dot(self.unit_direction, line_boundary.unit_normal)
+            a_co = line_boundary.unit_normal[1] ** 2 + line_boundary.unit_normal[0] ** 2
+            b_co = -2 * line_boundary.unit_normal[0]
+            c_co =  const ** 2 - line_boundary.unit_normal[1] ** 2
+            roots = np.roots([a_co, b_co, c_co])
+            if roots.size >= 2:
+                # Find solution with the largest difference
+                diff = 0
+                x = self.unit_direction[0]
+                for root in roots:
+                    current_diff = np.abs(root - self.unit_direction[0])
+                    if current_diff > diff:
+                        diff = current_diff
+                        x = root
+
+                # print("UNIT NORMAL ",line_boundary.unit_normal)
+                y = (const - line_boundary.unit_normal[0] * x) / line_boundary.unit_normal[1]
+                new_direction = -1 * np.array([x,y])
+                return new_direction
+        else:
+            new_direction = np.array([-self.unit_direction[0], self.unit_direction[1]])
             return new_direction
-        return None
 
 
 class LineBoundary(Line):
@@ -156,10 +161,10 @@ class Screen:
             pix_value = np.vstack([pix_value, reflected_pix_value])
         return pix_value
 
-screen1 = Screen(np.array([50, 0]), 250, 20)
-boundary_1 = np.array([[0,-100],[100,-100]])
-boundary_2 = np.array([[0,100],[100, 100]])
-boundary_3 = np.array([[100,-100],[100,100]])
+screen1 = Screen(np.array([20, 0]), 250, 10)
+boundary_1 = np.array([[0,-100],[40,-100]])
+boundary_2 = np.array([[0,100],[40, 100]])
+boundary_3 = np.array([[40,-100],[40,100]])
 boundary_4 = np.array([[40,40],[40,-40]])
 line_1 = LineBoundary(boundary_1, 1)
 line_1_back = LineBoundary(line_1.get_back_line(1), 1)
